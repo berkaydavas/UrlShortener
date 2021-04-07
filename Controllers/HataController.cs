@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using UrlShortener.ViewModels;
 
-namespace UrlShortener.App_Start
+namespace UrlShortener.Controllers
 {
     public class HataController : Controller
     {
