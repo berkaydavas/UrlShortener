@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using UrlShortener.Helpers;
 using UrlShortener.Models;
 
 namespace UrlShortener.Controllers
@@ -56,6 +57,7 @@ namespace UrlShortener.Controllers
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Parolanız değiştirildi."
+                : message == ManageMessageId.ConfirmEmailSended ? "Doğrulama maili gönderildi."
                 : message == ManageMessageId.SetPasswordSuccess ? "Parolanız ayarlandı."
                 : message == ManageMessageId.SetTwoFactorSuccess ? "İki öğeli kimlik doğrulama sağlayıcısı ayarlandı."
                 : message == ManageMessageId.Error ? "Hata oluştu."
@@ -66,6 +68,7 @@ namespace UrlShortener.Controllers
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
+                IsEmailConfirmed = IsEmailConfirmed(),
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -73,6 +76,19 @@ namespace UrlShortener.Controllers
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
             return View(model);
+        }
+
+        //
+        // GET: /Manage/ConfirmEmail
+        public async Task<ActionResult> ConfirmEmail()
+        {
+            ApplicationUser ActiveUser = UserData.GetActiveUser();
+
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(ActiveUser.Id);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = ActiveUser.Id, code = code }, protocol: Request.Url.Scheme);
+            await UserManager.SendEmailAsync(ActiveUser.Id, "Hesabınızı onaylayın", "Lütfen hesabınızı onaylamak için <a href=\"" + callbackUrl + "\">buraya tıklayın</a>.");
+
+            return RedirectToAction("Index", "Manage", new { message = ManageMessageId.ConfirmEmailSended });
         }
 
         //
@@ -363,6 +379,16 @@ namespace UrlShortener.Controllers
             return false;
         }
 
+        private bool IsEmailConfirmed()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                return user.EmailConfirmed;
+            }
+            return false;
+        }
+
         private bool HasPhoneNumber()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
@@ -377,6 +403,7 @@ namespace UrlShortener.Controllers
         {
             AddPhoneSuccess,
             ChangePasswordSuccess,
+            ConfirmEmailSended,
             SetTwoFactorSuccess,
             SetPasswordSuccess,
             RemoveLoginSuccess,

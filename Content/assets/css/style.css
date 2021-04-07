@@ -67,6 +67,7 @@ body:before {
     top: 0;
     left: 0;
     background-color: rgba(255, 255, 255, .8);
+    z-index: 55;
 }
 
 #notification-banner .content {
@@ -92,9 +93,19 @@ body:before {
     padding: 0 20px;
 }
 
-#notification-banner .button button {
+#notification-banner .button {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+#notification-banner .button :is(button, a) {
     text-transform: uppercase;
     padding: 0;
+    margin-left: 10px;
+}
+
+#notification-banner .button :is(button, a):first-child {
+    margin-left: 0;
 }
 
 #notification-banner.success .icon {
@@ -107,6 +118,10 @@ body:before {
 
 #notification-banner.info .icon {
     background-color: rgba(23, 162, 184, .3);
+}
+
+#notification-banner.warning .icon {
+    background-color: rgba(255, 193, 7, .3);
 }
 
 #header {

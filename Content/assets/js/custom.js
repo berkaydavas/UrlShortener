@@ -73,8 +73,16 @@ $(".ajax-button").off().click(function (event) {
 	getModalContent(url, modal);
 });
 
-$("#notification-banner button").off().click(function (event) {
+$("#notification-banner button:not(.action)").off().click(function (event) {
 	event.preventDefault();
 	this.closest("#notification-banner").remove();
-	window.history.replaceState({}, document.title, "/");
+
+	let url = new URL(location.href);
+	let params = url.searchParams;
+
+	params.delete("m");
+	params.delete("c");
+	params.delete("message");
+
+	window.history.replaceState({}, document.title, url.href);
 });

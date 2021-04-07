@@ -22,6 +22,24 @@
     </div>
 }
 
+@if (string.IsNullOrEmpty(ViewBag.StatusMessage) && !Model.IsEmailConfirmed)
+{
+    <div id="notification-banner" class="info">
+        <div class="content">
+            <div class="icon text-info">
+                <i class="lni lni-invention"></i>
+            </div>
+            <div class="message text-info">
+                Mail adresiniz doğrulanmamış. Hesap şifrenizi unutmanız durumunda mail alamayacaksınız. Lütfen mail adresinizi doğrulayın.
+            </div>
+            <div class="button">
+                <button class="btn btn-link text-danger">İptal</button>
+                <a href="@Url.Action("ConfirmEmail", "Manage")" class="btn btn-link text-success action">Gönder</a>
+            </div>
+        </div>
+    </div>
+}
+
 <div>
     <dl class="dl-horizontal">
         <dt>Parola:</dt>
