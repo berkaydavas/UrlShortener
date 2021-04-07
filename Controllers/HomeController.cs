@@ -70,6 +70,12 @@ namespace UrlShortener.Controllers
                 if (IsAuthenticated)
                     ViewModel.Urls = Db.ShortedUrls.Where(x => x.UserId == ActiveUserId).OrderByDescending(x => x.Date).ToList();
 
+                if (Model.LongUrl.Contains(Request["HTTP_HOST"]))
+                {
+                    ModelState.AddModelError("already_error", "Kısaltılmış bir URL'i tekrar kısaltamazsınız.");
+                    return View(ViewModel);
+                }
+
                 if (!ModelState.IsValid)
                     return View(ViewModel);
 
