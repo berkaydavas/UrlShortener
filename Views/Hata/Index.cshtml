@@ -1,0 +1,14 @@
+﻿@model UrlShortener.ViewModels.ErrorViewModel
+@{
+    ViewBag.Title = Model.SiteTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.PageTitle</h2>
+
+<div class="row">
+    <div class="col-12">
+        <p>@Model.ErrorDesc</p>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-sm btn-primary">Anasayfa</a>
+    </div>
+</div>

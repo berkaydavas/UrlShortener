@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Üyelik Avantajları";
+    bool IsLayout = (bool)ViewBag.Layout;
+
+    Layout = IsLayout ? "~/Views/Shared/_Layout.cshtml" : null;
+}
+
+@if (!IsLayout)
+{
+    <text>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ajax-button-modal-label">@ViewBag.Title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Kapat">
+                        <span aria-hidden="true">
+                            <i class="lni lni-close"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+    </text>
+}
+
+                    <h6>Üyeler;</h6>
+
+                    <ul class="mt-3">
+                        <li class="mb-3">Linklerini ve kaç tıklama aldıklarını görebilir.</li>
+                        <li class="mb-3">Linkleri silinmez, sistem var oldukça kayıtları saklanır.</li>
+                        <li class="mb-3">Özel link adları oluşturabilir.</li>
+                        <li class="mb-3">Yönlendirmeleri pasifleştirebilir.</li>
+                    </ul>
+
+@if (!IsLayout)
+{
+    @Html.Raw("</div></div></div>");
+}
+
