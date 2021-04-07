@@ -75,6 +75,12 @@ namespace UrlShortener.Controllers
 
                 try
                 {
+                    if (ViewModel.Urls.Where(x => x.Url == Model.LongUrl).Count() > 0)
+                    {
+                        ModelState.AddModelError("count_error", "Bu URL kaydını daha önce eklediniz.");
+                        return View(ViewModel);
+                    }
+
                     ShortedUrl NewUrl = new ShortedUrl()
                     {
                         Code = Cipher.CreateUrlCode(),
