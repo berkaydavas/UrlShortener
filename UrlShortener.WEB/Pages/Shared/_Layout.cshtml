@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>@ViewData["Title"] - URLshrtnr</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap">
+
+  <link rel="stylesheet" href="~/assets/fonts/LineIcons/font-css/LineIcons.min.css" />
+
+  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="~/lib/perfect-scrollbar/perfect-scrollbar.css" />
+  <link rel="stylesheet" href="~/assets/css/style.css" asp-append-version="true" />
+</head>
+<body>
+  <div class="body-content">
+    <header id="header" class="w-100">
+      <div class="navbar navbar-expand navbar-dark bg-transparent w-100 p-0">
+        <a asp-page="/Index" class="navbar-brand me-auto"><i class="lni lni-link"></i> shrtnr</a>
+        <partial name="_LoginPartial" />
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+      @RenderBody()
+    </div>
+
+    <footer id="footer" class="row">
+      <div class="col-md-7">
+        <p class="text-white-50">
+          URLshrtnr &copy; @DateTime.Now.Year - Powered by <a href="https://berkaydavas.com" target="_blank" class="text-white">Berkay Davas</a>
+        </p>
+      </div>
+      <div class="col-md-5">
+        <ul>
+          <li><a class="ajax-button">Üyelik Avantajları</a></li>
+          <li><a target="_blank" href="https://berkaydavas.com/iletisim">İletişim</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+  <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="~/lib/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+  <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+
+  <script src="~/assets/js/custom.js" asp-append-version="true"></script>
+
+  @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

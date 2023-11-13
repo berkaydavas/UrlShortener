@@ -1,0 +1,129 @@
+﻿@page
+@model IndexModel
+@{
+  ViewData["Title"] = "Anasayfa";
+  string urlPrefix = Request.Host + "/r/";
+}
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+  string[] messageData = Model.StatusMessage.Split(',');
+  if (messageData.Length == 2)
+  {
+    string message = messageData[0];
+    string classes = messageData[1];
+
+    <div id="notification-banner" class="@classes">
+      <div class="content">
+        <div class="icon text-@classes">
+          @switch (classes)
+          {
+            case "success":
+              <i class="lni lni-checkmark"></i>
+              break;
+            case "danger":
+              <i class="lni lni-close"></i>
+              break;
+          }
+        </div>
+        <div class="message text-@classes">
+          @Html.Raw(message)
+        </div>
+        <div class="button me-2">
+          <button class="btn btn-link text-@classes">Tamam</button>
+        </div>
+      </div>
+    </div>
+  }
+}
+
+<form id="url-short-form" method="post">
+  <div asp-validation-summary="All" class="text-danger form-returns"></div>
+
+  <div class="url-input-group">
+    <input asp-for="LongUrl" placeholder="Kısaltmak için URL giriniz." autocomplete="off" autofocus required />
+    <i class="url-icon lni lni-link"></i>
+    <button type="submit" class="btn btn-sm btn-primary">Kısalt</button>
+  </div>
+</form>
+
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+  if (Model.Urls?.Length > 0)
+  {
+    <div id="url-info">
+      <p>URL: <span>@Model.Urls.Length</span> || Toplam Tıklanma: <span>@Model.Urls.Sum(x => x.Click)</span></p>
+      <button id="delete-all-button" class="btn btn-link text-danger">Tümünü Sil</button>
+    </div>
+
+    <div id="urls-wrap" class="position-relative table-responsive-sm">
+      <table class="table table-bordered m-0">
+        <thead>
+          <tr>
+            <th scope="col">Kısa Link</th>
+            <th scope="col" width="180">Link</th>
+            <th scope="col" width="60">Durum</th>
+            <th scope="col" width="90">Tarih</th>
+            <th scope="col" width="40">Tık</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var url in Model.Urls)
+          {
+            string shortUrl = "https://" + urlPrefix + url.Code;
+
+            <tr>
+              <td>
+                <div class="d-flex align-items-center justify-content-between w-100">
+                  <a target="_blank" href="@shortUrl">@url.Code</a>
+                  <div class="d-flex flex-nowrap">
+                    <button class="btn btn-link text-black-50 p-0 copy-button" data-url-code="@url.Code"><i class="lni lni-clipboard"></i></button>
+                    <button class="btn btn-link text-black-50 p-0 ms-2 edit-button" data-url-code="@url.Code"><i class="lni lni-pencil-alt"></i></button>
+                  </div>
+                </div>
+              </td>
+              <td class="url" width="180">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                  <a target="_blank" href="@url.Url">@url.Url</a>
+                  <button class="btn btn-link text-black-50 p-0 see-button" data-url="@url.Url"><i class="lni lni-eye"></i></button>
+                </div>
+              </td>
+              <td width="60">@(url.IsActive ? "Aktif" : "Pasif")</td>
+              <td class="text-center" width="90" title="@url.CreatedDate.ToString("dd MMMM yyyy HH:mm")">@url.CreatedDate.ToString("dd.MM.yyyy")</td>
+              <td class="text-center" width="40">@url.Click</td>
+              <td class="actions" width="90">
+                <div class="d-flex align-items-center justify-content-end gap-2">
+                  <form method="post">
+                    @if (url.IsActive)
+                    {
+                      <button asp-page="/Url/Toggle" asp-route-code="@url.Code" asp-page-handler="Passive" type="submit" class="btn btn-link px-0 fs-6" title="Pasifleştir">
+                        <i class="lni lni-pause"></i>
+                      </button>
+                    }
+                    else
+                    {
+                      <button asp-page="/Url/Toggle" asp-route-code="@url.Code" asp-page-handler="Active" type="submit" class="btn btn-link px-0 fs-6" title="Aktifleştir">
+                        <i class="lni lni-play"></i>
+                      </button>
+                    }
+                  </form>
+                  <button type="button" class="btn btn-link px-0 text-danger delete-button fs-6" data-url-code="@url.Code"><i class="lni lni-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+<input type="text" id="copy-url-input" />
+
+@section Scripts {
+  <script>
+    const UrlPrefix = "@Html.Raw(urlPrefix)";
+  </script>
+  <script src="~/assets/js/home.js"></script>
+}
